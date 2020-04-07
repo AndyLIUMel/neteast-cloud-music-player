@@ -12,10 +12,28 @@ https://github.com/Binaryify/NeteaseCloudMusicApi
 
 ![picture 02](https://github.com/tatoMa/neteast-cloud-music-player/blob/master/02.jpg?raw=true)
 
+Backend
+- [x] compressed api by g-zip
+- [x] proxy settings
+
+Frontend
 - [ ] maybe login?
-- [ ] large image adaptive loading
+- [ ] add full PWA support?
+- [ ] Progressive Loading? different layout or resources based on device types and network speed
 - [ ] download music function
-- [ ] music progress slider click and jump to time function
+- [ ] redo player animation and transaction
+- [ ] player loop/random function
+- [ ] UX/UI logic refactor
+- [ ] add Skeleton loaders
+- [ ] Lyric sync
+- [x] theme and color settings
+- [x] setting page
+- [x] album page
+- [x] artist page
+- [x] large image adaptive loading
+- [x] music progress slider click and jump to time function
+- [x] Lyric display
+- [x] fix Chrome security policy don't allow instantiate AudioContext before load audio source 
 - [x] fix music url request 403 error (by adding referrer head into index page)
 - [x] reduce the bundle size and loading size(to homepage 440k total)
 - [x] material icon tree-shaking (Reduce 300K after build the bundle)

@@ -44,30 +44,27 @@
       </v-list-item-action>
       <v-list-item-title class="grey--text text--darken-1">Custom Playlist</v-list-item-title>
     </v-list-item>
-    <v-list-item link>
-      <v-list-item-action>
-        <v-icon color="grey darken-1">{{mdiAccountSettings}}</v-icon>
-      </v-list-item-action>
-      <v-list-item-title class="grey--text text--darken-1">Setting</v-list-item-title>
-    </v-list-item>
     </v-list-item-group>
   </v-list>
 </template>
 
 <script>
-import { mdiPlusCircleOutline, mdiAccountSettings, mdiFire, mdiFormatListBulletedSquare } from '@mdi/js'
+import { mdiPlusCircleOutline, mdiFileCog, mdiFire, mdiPlaylistMusic, mdiAlbum, mdiAccountMusic } from '@mdi/js'
 export default {
   data () {
     return {
       mdiPlusCircleOutline,
-      mdiAccountSettings,
+      mdiFileCog,
       mdiFire,
-      mdiFormatListBulletedSquare,
+      mdiPlaylistMusic,
+      mdiAccountMusic,
       item: 2,
       items: [
         { icon: mdiFire, text: 'Top Music', url: '/' },
-        { icon: mdiFormatListBulletedSquare, text: 'Top Playlists', url: 'topplaylists' }
-        // { icon: 'mdi-account-multiple', text: 'Top Artists', url: 'topartist' }
+        { icon: mdiPlaylistMusic, text: 'Top Playlists', url: 'topplaylists' },
+        { icon: mdiAccountMusic, text: 'Top Artists', url: 'topartist' },
+        { icon: mdiAlbum, text: 'New Albums', url: 'newalbum' },
+        { icon: mdiFileCog, text: 'Setting', url: 'setting' }
       ]
     }
   }

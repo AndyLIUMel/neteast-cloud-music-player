@@ -1,7 +1,6 @@
 <template>
   <v-container
-        class=" pa-0 pa-sm-3 ma-0 mb-12"
-        fluid
+    class="pt-0 mb-8 pb-6 pb-sm-12"
   >
     <!-- mobile screen -->
     <v-tabs
@@ -48,11 +47,6 @@ export default {
   name: 'TopMusic',
   components: {
     TopMusicItem
-  },
-  data () {
-    return {
-
-    }
   },
   computed: {
     breakpoint () {

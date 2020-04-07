@@ -1,21 +1,24 @@
 <template>
-  <v-card class="card-hover" color="secondary">
+  <v-card class="card-hover" color="secondary" >
+
+    <!-- cover image -->
     <v-img
-      :src="item.coverImgUrl+'?param=300y300'"
-      class="white--text align-end image"
+      v-ripple
+      :src="httpToHttps(item.coverImgUrl)+'?param=300y300'"
+      class="white--text align-end cursor-pointer image-hover"
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
       height="20vh"
       @click.stop="$emit('goToPlaylist',item)"
     >
       <v-card-title class="subtitle-1" v-text="item.name"></v-card-title>
-    </v-img>
+    </v-img><!-- cover image -->
 
+    <!-- creater info and tags of music types -->
     <v-card-actions>
       <v-avatar
         size="36">
         <img
-          :src="item.creator.avatarUrl+'?param=36y36'"
-          :lazy-src="item.creator.avatarUrl+'?param=5y5'"
+          :src="httpToHttps(item.creator.avatarUrl)+'?param=36y36'"
           :alt="item.creator.nickname"
         >
       </v-avatar>
@@ -27,15 +30,18 @@
         small
         class="mx-1"
         color="primary"
+        @click.stop="$emit('goToPlaylistsByTag', tag)"
       >
         {{tag}}
       </v-chip>
-    </v-card-actions>
+    </v-card-actions><!-- creater info and tags of music types -->
+
   </v-card>
 </template>
 
 <script>
 import { mdiHeartOutline, mdiPlayCircleOutline, mdiPlaylistMusicOutline } from '@mdi/js'
+import { httpToHttps } from '../utils/helper'
 
 export default {
   props: {
@@ -47,12 +53,20 @@ export default {
     return {
       mdiHeartOutline,
       mdiPlayCircleOutline,
-      mdiPlaylistMusicOutline
+      mdiPlaylistMusicOutline,
+      httpToHttps
     }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
+<style scoped>
+.card-hover{
+  transition: .2s ease-in-out;
+}
+.card-hover:hover{
+  box-shadow: inset 0 0 0 10em rgba(255, 255, 255, 0.2);
+}
+.card-hover:hover .image-hover{
+  filter: brightness(1.15)
+}
 </style>

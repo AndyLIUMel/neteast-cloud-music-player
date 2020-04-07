@@ -2,6 +2,7 @@
   <!-- navbar -->
   <v-app-bar
     app
+    dense
     color="secondary"
     clipped-left
     class="px-xs-0 px-sm-5"
@@ -77,7 +78,7 @@ export default {
     goToHomePage () {
       this.$router.push('/')
     },
-    goToSearchName () {
+    goToSearchPage () {
       this.searchOpen = false
       this.$router.push(`/search?keyword=${this.search}`)
     },
@@ -85,8 +86,8 @@ export default {
       this.searchOpen = !this.searchOpen
     },
     searchInput () {
-      this.goToSearchName()
-      this.$store.commit('setSearchResult', this.$route.query.keyword)
+      this.goToSearchPage()
+      // this.$store.commit('setSearchResult', this.$route.query.keyword)
       this.search = ''
       this.searchOpen = false
     },

@@ -2,7 +2,8 @@
   <div>
 <!-- {{getCommentsById}} -->
   <!-- Loading progress bar -->
-  <loading v-if="getCommentsById.length" :loading='getCommentsById.length === 0'/>
+  <loading v-if="!getCommentsById"/>
+  <div v-if="getCommentsById" class="headline mx-auto mb-2">Messages:</div>
   <v-card
     v-for="(item, index) in getCommentsById"
     :key="index"
@@ -48,7 +49,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import loading from './Loading'
+import loading from '../Loading'
 export default {
   components: {
     loading

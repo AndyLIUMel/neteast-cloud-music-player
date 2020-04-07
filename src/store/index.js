@@ -1,8 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import player from './modules/player'
+import artist from './modules/artist'
+import search from './modules/search'
+import album from './modules/album'
 import {
   getPlayLists,
+  getAllPlayListTags,
+  getPlayListByTagName,
   getPlayListById,
   getSearchResultByText,
   getNewMusicLists,
@@ -17,6 +22,8 @@ export default new Vuex.Store({
     // appDrawer: false,
     playListById: null,
     playLists: [],
+    allPlayListTags: null,
+    // playListByTagName: null,
     searchResult: null,
     newMusicLists: [],
     comments: null,
@@ -32,7 +39,20 @@ export default new Vuex.Store({
       )
     },
     setPlayLists (state) {
+      state.playLists = []
       getPlayLists().then(res => { state.playLists = res })
+    },
+    setAllPlayListTags (state) {
+      getAllPlayListTags().then(res => {
+        state.allPlayListTags = res
+      })
+    },
+    setPlayListByTagName (state, tagName) {
+      state.playLists = []
+      getPlayListByTagName(tagName).then(res => {
+        // console.log(res)
+        state.playLists = res
+      })
     },
     setSearchResult (state, text) {
       state.searchResult = null
@@ -68,13 +88,19 @@ export default new Vuex.Store({
     //   return state.appDrawer
     // },
     getPlayListById: (state) => {
+      // console.log(state.playListById)
       return state.playListById
     },
     getPlayLists: (state) => {
       // console.log(state.playLists)
       return state.playLists
     },
+    getAllPlayListTags: (state) => {
+      return state.allPlayListTags
+    },
     getSearchResult: (state) => {
+      console.log(state.searchResult)
+
       return state.searchResult
     },
     getNewMusicLists: (state) => {
@@ -89,6 +115,9 @@ export default new Vuex.Store({
 
   },
   modules: {
-    player
+    player,
+    artist,
+    search,
+    album
   }
 })

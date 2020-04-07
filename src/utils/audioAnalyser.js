@@ -1,14 +1,22 @@
 // inspired by wayou from https://github.com/wayou/HTML5_Audio_Visualizer
 
+var audio
+var ctx
+var analyser
+
 var init = () => {
   window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext
 }
 
-var start = () => {
+function adjust (color, amount) {
+  return '#' + color.replace(/^#/, '').replace(/../g, color => ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2))
+}
+
+var start = (themeColor) => {
   // init
-  var audio = document.getElementById('audio')
-  var ctx = new AudioContext()
-  var analyser = ctx.createAnalyser()
+  audio = document.getElementById('audio')
+  ctx = new AudioContext()
+  analyser = ctx.createAnalyser()
   var audioSrc = ctx.createMediaElementSource(audio)
 
   audioSrc.connect(analyser)
@@ -30,9 +38,15 @@ var start = () => {
   var capYPositionArray = [] /// /store the vertical position of hte caps for the preivous frame
   ctx = canvas.getContext('2d')
   var gradient = ctx.createLinearGradient(0, 0, 0, 250)
-  gradient.addColorStop(1, '#fe457cde')
-  gradient.addColorStop(0.5, '#ff91b27c')
-  gradient.addColorStop(0, '#c9003cde')
+
+  var colorBottom = adjust(themeColor, -10)
+  var colorMid = adjust(themeColor, +100)
+  var colorTop = adjust(themeColor, +230)
+
+  // gradient.addColorStop(1, '#fe457cde')
+  gradient.addColorStop(0, `${colorTop}30`)
+  gradient.addColorStop(0.7, `${colorMid}60`)
+  gradient.addColorStop(1, `${colorBottom}D0`)
   // loop
   function renderFrame () {
     // var array = new Uint8Array(analyser.frequencyBinCount)
@@ -60,5 +74,9 @@ var start = () => {
   renderFrame()
   // audio.play();
 }
+var stop = () => {
+  console.log(analyser)
 
-export default { init, start }
+  analyser.close()
+}
+export default { init, start, stop }

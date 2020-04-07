@@ -1,5 +1,5 @@
 // import mock from '../../utils/mock'
-import { getMusicUrlById, getMusicDetailById } from '../../utils/api'
+import { getMusicUrlById, getMusicDetailById, getLyricById } from '../../utils/api'
 // import { getMusicUrlById, getMusicUrlByIds, getMusicDetailById } from '../../utils/api'
 import store from '..'
 
@@ -13,15 +13,13 @@ export default {
     // musicDetailById: null,
     musicDetailsList: [],
     musicUrlsList: [],
-    currentTrack: 0
+    currentTrack: 0,
+    lyric: null
     // currentPausedSong: null
   },
   mutations: {
-    togglePaused: (state, payload) => {
-      if (payload) {
-        state.paused = true
-      } else state.paused = false
-      // state.paused = !state.paused
+    setPaused: (state, paused) => {
+      state.paused = paused
     },
     setMusicDetailById: (state, payload) => {
       // console.log(payload)
@@ -45,20 +43,22 @@ export default {
       if (state.musicDetailsList.length > 0) {
         state.musicUrlsList = []
         // console.log(state.musicDetailsList[state.currentTrack].id)
-        getMusicUrlById(state.musicDetailsList[state.currentTrack].id)
-          .then(res => {
+        try {
+          getMusicUrlById(state.musicDetailsList[state.currentTrack].id)
+            .then(res => {
             // console.log(res)
-            state.musicUrlsList.push(res)
-            if (!res.url) {
-              console.log('no url return')
-              store.commit('player/setNextTrack')
-            }
-          })
-          .catch(res => {
-            console.log('error return', res)
-            state.musicUrlsList.push(res)
-            store.commit('player/setNextTrack')
-          })
+              state.musicUrlsList.push(res)
+              if (!res.url) {
+                console.log('no url return')
+                store.commit('player/setNextTrack')
+              }
+              store.commit('player/setLyricById', state.musicDetailsList[state.currentTrack].id)
+            })
+        } catch (error) {
+          error.log('error return', error)
+          // state.musicUrlsList.push(res)
+          store.commit('player/setNextTrack')
+        }
       }
     },
     setMusicUrlsListByPassIdFromMusicList: (state, id) => {
@@ -119,26 +119,16 @@ export default {
         state.musicDetailsList.push(res)
         store.commit('player/setMusicUrlsListById')
       })
+    },
+    setLyricById: (state, id) => {
+      getLyricById(id)
+        .then(res => {
+          state.lyric = res.lrc.lyric
+        })
+        .catch(() => {
+          state.lyric = null
+        })
     }
-    // setMusicUrlsListByIdsList: (state) => {
-    //   if (state.musicDetailsList.length > 0) {
-    //     state.musicUrlsList = []
-    //     console.log(state.musicDetailsList[0].id)
-
-    //     const ids = state.musicDetailsList.map((item) => item.id)
-    //     getMusicUrlByIds(ids.join(',')).then(res => {
-    //       console.log(res)
-
-    //       state.musicUrlsList = res
-    //     })
-    //   }
-    // },
-
-    // setCurrentPausedSong: (state, song) => {
-    //   console.log('setCurrentSong', song)
-
-    //   state.currentPausedSong = song
-    // }
   },
   actions: {
     // setMusicUrlsListByIdAndCurrentPausedSong: async ({ state, commit }) => {
@@ -155,15 +145,20 @@ export default {
       return state.currentTrack
     },
     getMusicDetailsList: (state) => {
-      console.log('music details', state.musicDetailsList)
+      // console.log('music details', state.musicDetailsList)
       return state.musicDetailsList
     },
     getMusicUrlsListById: (state) => {
-      console.log('url info', state.musicUrlsList)
+      // console.log('url info', state.musicUrlsList)
       return state.musicUrlsList
     },
     getMusicDetailById: (state) => {
       return state.musicDetailById
+    },
+    getLyricById: (state) => {
+      // console.log(state.lyric)
+
+      return state.lyric
     }
     // getCurrentPausedSong: (state) => {
     //   return state.currentPausedSong

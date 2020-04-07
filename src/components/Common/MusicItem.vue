@@ -1,17 +1,21 @@
 <template>
+  <div>
   <v-list-item
     @click.stop="$emit('setMusic',id)"
     >
-    <v-list-item-icon>
+    <!-- <v-list-item-icon>
         <v-icon>{{mdiPlaylistPlus}}</v-icon>
-    </v-list-item-icon>
+    </v-list-item-icon> -->
     <v-list-item-content>
-        <v-list-item-title v-text="artist+' - '+name"></v-list-item-title>
+        <v-list-item-title v-if="album" v-text="artist+' - '+name+' ('+album+')'"></v-list-item-title>
+        <v-list-item-title v-else v-text="artist+' - '+name"></v-list-item-title>
     </v-list-item-content>
     <v-list-item-icon>
-        <v-icon>{{mdiPlayCircleOutline}}</v-icon>
+        <v-icon size="32">{{mdiPlayCircleOutline}}</v-icon>
     </v-list-item-icon>
   </v-list-item>
+  <v-divider></v-divider>
+  </div>
 </template>
 
 <script>
@@ -33,6 +37,10 @@ export default {
     },
     name: {
       type: String
+    },
+    album: {
+      type: String,
+      default: ''
     }
   }
 }

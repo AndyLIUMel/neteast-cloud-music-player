@@ -1,15 +1,15 @@
 <template>
   <v-col
     justify="start"
-    class="pa-1 pa-sm-3"
+    class="pa-0 pa-sm-2"
   >
     <!-- Loading progress bar -->
-    <loading :loading='getTopMusicListsById[id].length === 0'/>
+    <loading v-if='getTopMusicListsById[id].length === 0'/>
 
     <!-- main list section -->
     <v-container fluid class="py-0 px-1 pa-sm-2 pt-sm-0" v-if="getTopMusicListsById[id].length !== 0">
       <div class="headline text-center">{{getTopMusicListsById[id].name}}</div>
-      <v-row dense align-content="start" class="px-2">
+      <v-row dense align-content="start">
 
         <!-- button play the whole list -->
         <v-col
@@ -32,11 +32,13 @@
         <musicItemWithPic
           v-for="(item, index) in getTopMusicListsById[id].tracks"
           :key="item.id"
-          :item="item"
+          :name="item.name"
+          :artist="item.ar[0].name"
+          :imgUrl="item.al.picUrl"
+          :id="item.id"
           :index="index"
           :maxItem="maxItem * page"
           @setMusic="setMusic"
-          @addToPlaylist="addToPlaylist"
         />
         <v-btn
           block rounded outlined color="primary"
@@ -57,10 +59,10 @@
 <script>
 import { mapGetters } from 'vuex'
 import loading from '../components/Loading'
-import musicItemWithPic from './MusicItemWithPic'
+import musicItemWithPic from './Common/MusicItemWithPic'
 import { mdiChevronDown, mdiPlayCircleOutline } from '@mdi/js'
 export default {
-  name: 'HotPlayLists',
+  name: 'TopMusicItem',
   props: [
     'id'
   ],
@@ -73,14 +75,15 @@ export default {
       mdiChevronDown,
       mdiPlayCircleOutline,
       maxItem: 30,
-      page: 1
+      page: 1,
+      loadedMusicDetailsList: false
       // data: [],
       // search: ''
     }
   },
   computed: {
     ...mapGetters({
-      // getNewMusicLists: 'getNewMusicLists',
+      getMusicDetailsList: 'player/getMusicDetailsList',
       getTopMusicListsById: 'getTopMusicListsById'
     })
     // getTopMusicListsById () {
@@ -90,20 +93,23 @@ export default {
   mounted () {
     // this.$store.commit('setNewMusicLists')
     this.$store.commit('setTopMusicListsById', this.id)
+    this.loadedMusicDetailsList = false
   },
   methods: {
-    setMusic (item) {
-      this.$store.commit('player/togglePaused', false)
-      this.$store.commit('player/setMusicDetailById', item)
-      this.$store.commit('player/setMusicUrlsListById')
+    setMusic (id) {
+      if (!this.loadedMusicDetailsList) {
+        this.$store.commit('player/setMusicDetailByIdsList', this.getTopMusicListsById[this.id].tracks)
+        this.loadedMusicDetailsList = true
+      }
+      this.$store.commit('player/setMusicUrlsListByPassIdFromMusicList', id)
     },
     setMusicList () {
-      this.$store.commit('player/togglePaused', false)
+      // this.$store.commit('player/setPaused', true)
       this.$store.commit('player/setMusicDetailByIdsList', this.getTopMusicListsById[this.id].tracks)
       this.$store.commit('player/setMusicUrlsListById')
     },
     addToPlaylist (item) {
-      this.$store.commit('player/togglePaused', false)
+      // this.$store.commit('player/setPaused', true)
       this.$store.commit('player/addMusicDetailById', item)
       this.$store.commit('player/addMusicUrlsListById')
     }

@@ -1,19 +1,44 @@
 <template>
   <v-container
-    class="fill-height pa-0 pa-sm-3 ma-0"
-    fluid
+    class="pt-0 mb-8 pb-6 pb-sm-12"
   >
     <v-col
       justify="center"
-      class="pa-1 pa-sm-3 mb-12"
+      class="pa-0 pa-sm-2"
     >
 
       <!-- Loading progress bar -->
-      <loading :loading='getPlayLists.length === 0'/>
+      <loading v-if='getPlayLists.length === 0'/>
 
       <!-- main container -->
       <v-container fluid class="py-0 px-1 pa-sm-2 pt-sm-0">
         <v-row dense>
+
+          <div v-show="getPlayLists.length" class="mx-auto mb-1 mt-0 headline text-center">
+            {{this.$route.query.tag ? this.$route.query.tag : 'Top Playlist'}}
+          </div>
+
+          <!-- music types tag expension panel -->
+          <v-expansion-panels v-show="getPlayLists.length" focusable accordion>
+            <v-expansion-panel
+            >
+              <v-expansion-panel-header color="primary" ripple>
+                  Music Type Tags
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-chip
+                  v-ripple
+                  color="primary"
+                  class="mx-1 my-2 cursor-pointer"
+                  v-for="(tag, i) in getAllPlayListTags"
+                  :key="i"
+                  @click.stop="goToPlaylistsByTag(tag.name)"
+                >
+                  {{tag.name}}
+                </v-chip>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels><!-- music types tag expension panel -->
 
           <!-- the list -->
           <v-col
@@ -22,15 +47,17 @@
             cols="12"
             sm="6"
             md="4"
-            class="pa-2 pa-sm-2"
+            class="pa-0 py-1 pa-sm-2"
           >
             <TopPlayListItem
               :item=item
               @goToPlaylist=goToPlaylist
+              @goToPlaylistsByTag=goToPlaylistsByTag
             />
-          </v-col>
+          </v-col><!-- the list -->
+
         </v-row>
-      </v-container>
+      </v-container><!-- main container -->
 
     </v-col>
   </v-container>
@@ -46,36 +73,35 @@ export default {
     loading,
     TopPlayListItem
   },
-  data () {
-    return {
-      search: ''
-    }
-  },
   computed: {
     ...mapGetters({
-      getPlayLists: 'getPlayLists'
+      getPlayLists: 'getPlayLists',
+      getAllPlayListTags: 'getAllPlayListTags'
     })
   },
   mounted () {
-    this.$store.commit('setPlayLists')
+    const query = this.$route.query.tag
+    if (query) {
+      this.$store.commit('setPlayListByTagName', query)
+    } else {
+      if (this.getPlayLists.length === 0) {
+        this.$store.commit('setPlayLists')
+      }
+    }
+    if (!this.getAllPlayListTags) {
+      this.$store.commit('setAllPlayListTags')
+    }
   },
   methods: {
     goToPlaylist (item) {
-      this.$router.push(`/playlistdetails?id=${item.id}`)
+      this.$router.push(`/playlistdetail?id=${item.id}`)
+    },
+    goToPlaylistsByTag (tag) {
+      this.$router.push(`/playlist?tag=${tag}`)
     }
   }
 }
 </script>
-<style lang="scss" scoped>
-img{
-  max-width : 60px;
-}
-.image{
-  cursor: pointer;
-  zoom: 1;
-  transition: 200ms ease-in-out;
-}
-.card-hover:hover .image{
-  transform: translateY(-8px)
-}
+<style scoped>
+
 </style>
